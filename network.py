@@ -68,20 +68,23 @@ class AlexNetFc(nn.Module):
         self.classifier = nn.Sequential()
         for i in range(6):
             self.classifier.add_module("classifier" + str(i), self.base_model.classifier[i])
-        self.feature_layers = nn.Sequential(self.features, self.classifier)
+        
+        #self.feature_layers = nn.Sequential(self.features, self.classifier)
 
-        self.hash_bit = args.hash_bit
-        feature_dim = self.base_model.classifier[6].in_features
-        self.fc1 = nn.Linear(feature_dim, feature_dim)
-        self.activation1 = nn.ReLU()
-        self.fc2 = nn.Linear(feature_dim, feature_dim)
-        self.activation2 = nn.ReLU()
-        self.fc3 = nn.Linear(feature_dim, self.hash_bit)
-        self.last_layer = nn.Tanh()
-        self.dropout = nn.Dropout(0.5)
-        self.hash_layer = nn.Sequential(self.fc1, self.activation1, self.fc2, self.activation2, self.fc3,
+        if self.binary:
+            self.hash_bit = args.hash_bit
+            feature_dim = self.base_model.classifier[6].in_features
+            self.fc1 = nn.Linear(feature_dim, feature_dim)
+            self.activation1 = nn.ReLU()
+            self.fc2 = nn.Linear(feature_dim, feature_dim)
+            self.activation2 = nn.ReLU()
+            self.fc3 = nn.Linear(feature_dim, self.hash_bit)
+            self.last_layer = nn.Tanh()
+            self.dropout = nn.Dropout(0.5)
+            self.hash_layer = nn.Sequential(self.fc1, self.activation1, self.fc2, self.activation2, self.fc3,
                                         self.last_layer)
-        self.norm = L2N()
+        else:
+            self.norm = L2N()
 
     def forward(self, x):
 

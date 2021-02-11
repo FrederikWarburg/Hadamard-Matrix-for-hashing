@@ -75,7 +75,8 @@ def main(args):
 
     criterion = nn.BCELoss().cuda()
     #criterion = nn.MSELoss().cuda()
-    params_list = [{'params': model.feature_layers.parameters(), 'lr': args.multi_lr*args.lr}, # 0.05*(args.lr)
+    params_list = [{'params': model.features.parameters(), 'lr': args.multi_lr*args.lr},
+                   {'params': model.classifier.parameters(), 'lr': args.multi_lr*args.lr}, # 0.05*(args.lr)
                    {'params': model.hash_layer.parameters()}]
     optimizer = torch.optim.Adam(params_list, lr = args.lr, betas=(0.9, 0.999))
 
