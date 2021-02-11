@@ -123,8 +123,11 @@ def train(model, args, train_loader, criterion, Hash_center, optimizer, epoch, t
         #y = y[torch.mean(label.float(), dim=1)!=0]  # ignore some training image whose label is all zeros, this is for nus_wide
         #hash_center = hash_center[torch.mean(label.float(), dim=1)!=0]
 
-        center_loss = criterion(0.5 * (y + 1), 0.5 * (hash_center + 1))
-        Q_loss = torch.mean((torch.abs(y)-1.0)**2)
+        if args.binary:
+            center_loss = criterion(0.5 * (y + 1), 0.5 * (hash_center + 1))
+            Q_loss = torch.mean((torch.abs(y)-1.0)**2)
+        else:
+            Q_loss = 0
 
         if epoch <= two_loss_epoch:
             loss = args.lambda0*center_loss + args.lambda2 * Q_loss
@@ -217,5 +220,6 @@ def Hash_center_multilables(labels, Hash_center): # label.shape: [batch_size, nu
 
 if __name__ == '__main__':
     args = parser.parse_args()
+    print("binary", args.binary)
     main(args)
 

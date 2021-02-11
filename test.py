@@ -11,10 +11,12 @@ def mean_average_precision(database_hash, test_hash, database_labels, test_label
     # binary the hash code
     R = args.R
     T = args.T
-    database_hash[database_hash<T] = -1
-    database_hash[database_hash>=T] = 1
-    test_hash[test_hash<T] = -1
-    test_hash[test_hash>=T] = 1
+
+    if args.binary:
+        database_hash[database_hash<T] = -1
+        database_hash[database_hash>=T] = 1
+        test_hash[test_hash<T] = -1
+        test_hash[test_hash>=T] = 1
 
     query_num = test_hash.shape[0]  # total number for testing
     sim = np.dot(database_hash, test_hash.T)  

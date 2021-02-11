@@ -43,6 +43,8 @@ class Model(nn.Module):
 class AlexNetFc(nn.Module):
     def __init__(self, args):
         super(AlexNetFc, self).__init__()
+
+        self.binary = args.binary
         self.base_model = torchvision.models.alexnet(pretrained=True)
         self.features = self.base_model.features
         self.classifier = nn.Sequential()
@@ -63,12 +65,17 @@ class AlexNetFc(nn.Module):
                                         self.last_layer)
 
     def forward(self, x):
+
+        # alexnet
         x = self.features(x)
         x = x.view(x.size(0), 256*6*6)
         x = self.classifier(x)
-        y = self.hash_layer(x)
 
-        return y
+        # hashlayer
+        if self.binary:
+            x = self.hash_layer(x)
+
+        return x
 
 
 
