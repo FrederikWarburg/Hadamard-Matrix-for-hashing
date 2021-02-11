@@ -137,16 +137,25 @@ def train(model, args, train_loader, criterion, Hash_center, optimizer, epoch, t
                 similarity_loss = 0
                 # loss = center_loss #+ loss_mean
             else:
+                # split in first and second half
                 output1 = y.narrow(0, 0, int(0.5 * len(y)))
                 output2 = y.narrow(0, int(0.5 * len(y)), int(0.5 * len(y)))
+                
+                # split in first and second half
                 label1 = label[0:int(0.5 * len(label))]  # shape: [1/2*batch_size, num_class]
                 label2 = label[int(0.5 * len(label)):int(len(label))]  # shape: [1/2*batch_size, num_class]
+                
+                # to cuda
                 label1 = torch.autograd.Variable(label1).cuda()
                 label2 = torch.autograd.Variable(label2).cuda()
+
                 similarity_loss = pairwise_loss(output1, output2, label1, label2,
                                                 sigmoid_param=10. / args.hash_bit,
                                                 #l_threshold=15,  # "l_threshold":15.0,
                                                 data_imbalance=data_imbalance)  # for imagenet, is 100
+
+                print(similarity_loss)
+
             loss = args.lambda0*center_loss + args.lambda1*similarity_loss + args.lambda2*Q_loss
 
         loss.backward()
