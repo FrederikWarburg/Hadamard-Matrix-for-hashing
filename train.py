@@ -127,6 +127,7 @@ def train(model, args, train_loader, criterion, Hash_center, optimizer, epoch, t
             center_loss = criterion(0.5 * (y + 1), 0.5 * (hash_center + 1))
             Q_loss = torch.mean((torch.abs(y)-1.0)**2)
         else:
+            center_loss = 0
             Q_loss = 0
 
         if epoch <= two_loss_epoch:
