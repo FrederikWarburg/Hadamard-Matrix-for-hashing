@@ -1,6 +1,23 @@
 import torch.nn as nn
 import torchvision
 
+
+def l2n(x, eps=1e-6):
+    return x / (torch.norm(x, p=2, dim=1, keepdim=True) + eps).expand_as(x)
+
+class L2N(nn.Module):
+
+    def __init__(self, eps=1e-6):
+        super(L2N, self).__init__()
+        self.eps = eps
+
+    def forward(self, x):
+        return l2n(x, eps=self.eps)
+
+    def __repr__(self):
+        return self.__class__.__name__ + '(' + 'eps=' + str(self.eps) + ')'
+
+
 class Model(nn.Module):
     def __init__(self, args):
         super(Model, self).__init__()
@@ -63,17 +80,26 @@ class AlexNetFc(nn.Module):
         self.dropout = nn.Dropout(0.5)
         self.hash_layer = nn.Sequential(self.fc1, self.activation1, self.fc2, self.activation2, self.fc3,
                                         self.last_layer)
+        self.norm = L2N()
 
     def forward(self, x):
 
         # alexnet
+        print("1", x)
         x = self.features(x)
+        print("2", x)
         x = x.view(x.size(0), 256*6*6)
+        print("3", x)
         x = self.classifier(x)
+        print("4", x)
 
         # hashlayer
         if self.binary:
             x = self.hash_layer(x)
+        else:
+            x = self.norm(x)
+
+        print("5", x)
 
         return x
 

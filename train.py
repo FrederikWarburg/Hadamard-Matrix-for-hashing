@@ -154,8 +154,6 @@ def train(model, args, train_loader, criterion, Hash_center, optimizer, epoch, t
                                                 #l_threshold=15,  # "l_threshold":15.0,
                                                 data_imbalance=data_imbalance)  # for imagenet, is 100
 
-                print(similarity_loss)
-
             loss = args.lambda0*center_loss + args.lambda1*similarity_loss + args.lambda2*Q_loss
 
         loss.backward()
