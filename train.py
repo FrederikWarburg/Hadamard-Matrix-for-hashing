@@ -75,9 +75,13 @@ def main(args):
 
     criterion = nn.BCELoss().cuda()
     #criterion = nn.MSELoss().cuda()
-    params_list = [{'params': model.features.parameters(), 'lr': args.multi_lr*args.lr},
-                   {'params': model.classifier.parameters(), 'lr': args.multi_lr*args.lr}, # 0.05*(args.lr)
-                   {'params': model.hash_layer.parameters()}]
+    if args.binary:
+        params_list = [{'params': model.features.parameters(), 'lr': args.multi_lr*args.lr},
+                    {'params': model.classifier.parameters(), 'lr': args.multi_lr*args.lr}, # 0.05*(args.lr)
+                    {'params': model.hash_layer.parameters()}]
+    else:
+        params_list = [{'params': model.features.parameters(), 'lr': args.multi_lr*args.lr},
+                    {'params': model.classifier.parameters(), 'lr': args.multi_lr*args.lr}]
     optimizer = torch.optim.Adam(params_list, lr = args.lr, betas=(0.9, 0.999))
 
     #if len(args.gpu_ids)>1:
