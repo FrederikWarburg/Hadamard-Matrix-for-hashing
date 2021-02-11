@@ -156,10 +156,11 @@ def train(model, args, train_loader, criterion, Hash_center, optimizer, epoch, t
 
             loss = args.lambda0*center_loss + args.lambda1*similarity_loss + args.lambda2*Q_loss
 
-        loss.backward()
-        optimizer.step()
-        iter_num += 1
-        total_loss.append(loss.data.cpu().numpy())
+        if len(label) == args.batch_size:
+            loss.backward()
+            optimizer.step()
+            iter_num += 1
+            total_loss.append(loss.data.cpu().numpy())
 
         if i%100==0:
             end_time1 = time.time()

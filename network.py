@@ -86,13 +86,13 @@ class AlexNetFc(nn.Module):
     def forward(self, x):
 
         # alexnet
-        print("1", x)
+        #("1", x)
         x = self.features(x)
-        print("2", x)
+        #print("2", x)
         x = x.view(x.size(0), 256*6*6)
-        print("3", x)
+        #print("3", x)
         x = self.classifier(x)
-        print("4", x)
+        #print("4", x)
 
         # hashlayer
         if self.binary:
@@ -100,7 +100,7 @@ class AlexNetFc(nn.Module):
         else:
             x = self.norm(x)
 
-        print("5", x)
+        #print("5", x)
 
         return x
 
