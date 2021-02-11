@@ -10,14 +10,14 @@ import os
 import os.path
 
 def make_dataset(image_list, labels):
-    if labels:  # labels=None for imagenet
+    if labels:
       len_ = len(image_list)
-      images = [(image_list[i].strip(), labels[i, :]) for i in range(len_)]
-    else:      # split and get the labels
+      images = [(image_list[i].strip().replace("/home/caozhangjie/run-czj/dataset/imagenet", "/scratch/frwa/ImageNet").replace("/image/", "/train/image/"), labels[i, :]) for i in range(len_)]
+    else:
       if len(image_list[0].split()) > 2:
-        images = [(val.split()[0], np.array([int(la) for la in val.split()[1:]])) for val in image_list]
+        images = [(val.split()[0].replace("/home/caozhangjie/run-czj/dataset/imagenet", "/scratch/frwa/ImageNet").replace("/image/", "/train/image/"), np.array([int(la) for la in val.split()[1:]])) for val in image_list]
       else:
-        images = [(val.split()[0], int(val.split()[1])) for val in image_list]
+        images = [(val.split()[0].replace("/home/caozhangjie/run-czj/dataset/imagenet", "/scratch/frwa/ImageNet").replace("/image/", "/train/image/"), int(val.split()[1])) for val in image_list]
     return images
 
 
